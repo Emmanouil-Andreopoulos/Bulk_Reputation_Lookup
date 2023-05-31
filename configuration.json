@@ -1,0 +1,5 @@
+{
+    "enable_VT" : "True",
+    "enable_AbuseIP" : "True",
+    "input_filename" : "input_list.txt"
+}
