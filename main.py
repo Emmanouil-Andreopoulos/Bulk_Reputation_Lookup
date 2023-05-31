@@ -88,12 +88,18 @@ def get_api_key(provider, provider_counter):
 
 def vt_ip_lookup(ip_to_check, provider_counter):
     api_key = get_api_key("VT", provider_counter)
-    print(api_key)
+    response = requests.get(f"https://www.virustotal.com/api/v3/ip_addresses/{ip_to_check}",
+                            headers={"x-apikey": api_key, "Accept": "application/json"})
+    result = response.json()
+    print(result)
 
 
 def aip_ip_lookup(ip_to_check, provider_counter):
     api_key = get_api_key("AIP", provider_counter)
-    print(api_key)
+    response = requests.get(f"https://api.abuseipdb.com/api/v2/check?ipAddress={ip_to_check}",
+                            headers={"Key": api_key, "Accept": "application/json"})
+    result = response.json()
+    print(result)
 
 
 def get_provider_counter(provider, provider_counter):
