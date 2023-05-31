@@ -8,6 +8,8 @@ enable_AbuseIP = False
 IP_Addresses = list()
 input_filename = "input_list.txt"
 output_filename = "output_list.txt"
+VT_API_KEYS_filename = "VT_API_KEYS.txt"
+AIP_API_KEYS_filename = "AIP_API_KEYS.txt"
 
 
 def init_configuration():
@@ -20,7 +22,9 @@ def init_configuration():
         print('     "enable_VT" : "True",')
         print('     "enable_AbuseIP" : "True",')
         print('     "input_filename" : "input_list.txt",')
-        print('     "output_filename" : "output_list.txt"')
+        print('     "output_filename" : "output_list.txt",')
+        print('     "VT_API_KEYS_filename" : "VT_API_KEYS.txt",')
+        print('     "AIP_API_KEYS_filename" : "AIP_API_KEYS.txt"')
         print("}")
         quit()
 
@@ -35,6 +39,18 @@ def init_configuration():
     if configuration["input_filename"].casefold() != "".casefold():
         global input_filename
         input_filename = configuration["input_filename"]
+
+    if configuration["output_filename"].casefold() != "".casefold():
+        global output_filename
+        output_filename = configuration["output_filename"]
+
+    if configuration["input_filename"].casefold() != "".casefold():
+        global VT_API_KEYS_filename
+        VT_API_KEYS_filename = configuration["VT_API_KEYS_filename"]
+
+    if configuration["input_filename"].casefold() != "".casefold():
+        global AIP_API_KEYS_filename
+        AIP_API_KEYS_filename = configuration["AIP_API_KEYS_filename"]
 
 
 def read_input_file():
