@@ -12,6 +12,7 @@ input_filename = "input_list.txt"
 output_filename = "output_list.txt"
 VT_API_KEYS_filename = "VT_API_KEYS.txt"
 AIP_API_KEYS_filename = "AIP_API_KEYS.txt"
+delimiter = ";"
 
 
 def init_configuration():
@@ -86,22 +87,6 @@ def get_api_key(provider, provider_counter):
         return AIP_API_KEYS[provider_counter]
 
 
-def vt_ip_lookup(ip_to_check, provider_counter):
-    api_key = get_api_key("VT", provider_counter)
-    response = requests.get(f"https://www.virustotal.com/api/v3/ip_addresses/{ip_to_check}",
-                            headers={"x-apikey": api_key, "Accept": "application/json"})
-    result = response.json()
-    print(result)
-
-
-def aip_ip_lookup(ip_to_check, provider_counter):
-    api_key = get_api_key("AIP", provider_counter)
-    response = requests.get(f"https://api.abuseipdb.com/api/v2/check?ipAddress={ip_to_check}",
-                            headers={"Key": api_key, "Accept": "application/json"})
-    result = response.json()
-    print(result)
-
-
 def get_provider_counter(provider, provider_counter):
     api_keys_length = 0
     if provider == "VT":
@@ -118,21 +103,51 @@ def get_provider_counter(provider, provider_counter):
     return provider_counter
 
 
+def vt_ip_lookup(ip_to_check, provider_counter):
+    api_key = get_api_key("VT", provider_counter)
+    response = requests.get(f"https://www.virustotal.com/api/v3/ip_addresses/{ip_to_check}",
+                            headers={"x-apikey": api_key, "Accept": "application/json"})
+    result = response.json().get("data").get("attributes").get("last_analysis_stats")
+    f_result = delimiter + str(result["malicious"]) + delimiter + str(result["suspicious"]) + delimiter + \
+               str(result["harmless"]) + delimiter + str(result["undetected"]) + delimiter + str(result["timeout"])
+    return f_result
+
+
+def aip_ip_lookup(ip_to_check, provider_counter):
+    api_key = get_api_key("AIP", provider_counter)
+    response = requests.get(f"https://api.abuseipdb.com/api/v2/check?ipAddress={ip_to_check}",
+                            headers={"Key": api_key, "Accept": "application/json"})
+    result = response.json().get("data")
+    f_result = delimiter + str(result["abuseConfidenceScore"]) + delimiter + \
+               str(result["totalReports"]) + delimiter + str(result["countryCode"])
+    return f_result
+
+
 def ip_lookup():
     ip_addresses_length = len(IP_Addresses)
     ip_counter = 0
     vt_counter = -1
     aip_counter = -1
+    out_file = open(output_filename, "w")
+    file_header = "IP Address"
+    if enable_AbuseIP:
+        file_header += delimiter + "abuseConfidenceScore" + delimiter + "totalReports" + delimiter + "countryCode"
+    if enable_VT:
+        file_header += delimiter + "malicious" + delimiter + "suspicious" + delimiter + "harmless" + delimiter + "undetected" + delimiter + "timeout"
+    out_file.write(file_header + delimiter)
     for ip_address in IP_Addresses:
         ip_counter += 1
+        final_response = ip_address
         if enable_VT or enable_AbuseIP:
             print(f"({ip_counter}/{ip_addresses_length}) Checking {ip_address}...")
-        if enable_VT:
-            vt_counter = get_provider_counter("VT", vt_counter)
-            vt_ip_lookup(ip_address, vt_counter)
         if enable_AbuseIP:
             aip_counter = get_provider_counter("AIP", aip_counter)
-            aip_ip_lookup(ip_address, aip_counter)
+            final_response += str(aip_ip_lookup(ip_address, aip_counter))
+        if enable_VT:
+            vt_counter = get_provider_counter("VT", vt_counter)
+            final_response += str(vt_ip_lookup(ip_address, vt_counter))
+        out_file.write(final_response + delimiter)
+    out_file.close()
 
 
 if __name__ == '__main__':
