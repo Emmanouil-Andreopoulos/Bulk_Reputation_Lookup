@@ -137,7 +137,8 @@ def ip_lookup():
     out_file = open(output_filename, "w")
     file_header = "IP Address"
     if enable_AbuseIP:
-        file_header += delimiter + "AbuseConfidenceScore" + delimiter + "AbuseTotalReports" + delimiter + "CountryCode"
+        file_header += delimiter + "Abuse Confidence Score" + delimiter + "Abuse Total Reports" + \
+                       delimiter + "Country Code"
     if enable_VT:
         file_header += delimiter + "VT Malicious" + delimiter + "VT Suspicious" + delimiter + "VT Harmless" + \
                        delimiter + "VT Undetected" + delimiter + "VT Timeout"
