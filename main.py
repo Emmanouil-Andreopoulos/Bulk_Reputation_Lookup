@@ -25,9 +25,10 @@ def init_configuration():
         print('     "enable_VT" : "True",')
         print('     "enable_AbuseIP" : "True",')
         print('     "input_filename" : "input_list.txt",')
-        print('     "output_filename" : "output_list.txt",')
+        print('     "output_filename" : "output_list.csv",')
         print('     "VT_API_KEYS_filename" : "VT_API_KEYS.txt",')
-        print('     "AIP_API_KEYS_filename" : "AIP_API_KEYS.txt"')
+        print('     "AIP_API_KEYS_filename" : "AIP_API_KEYS.txt",')
+        print('     "delimiter" : ";"')
         print("}")
         quit()
 
@@ -54,6 +55,10 @@ def init_configuration():
     if configuration["input_filename"].casefold() != "".casefold():
         global AIP_API_KEYS_filename
         AIP_API_KEYS_filename = configuration["AIP_API_KEYS_filename"]
+
+    if configuration["delimiter"].casefold() != "".casefold():
+        global delimiter
+        delimiter = configuration["delimiter"]
 
 
 def init_api_keys():
@@ -134,7 +139,7 @@ def ip_lookup():
         file_header += delimiter + "abuseConfidenceScore" + delimiter + "totalReports" + delimiter + "countryCode"
     if enable_VT:
         file_header += delimiter + "malicious" + delimiter + "suspicious" + delimiter + "harmless" + delimiter + "undetected" + delimiter + "timeout"
-    out_file.write(file_header + delimiter)
+    out_file.write(file_header + delimiter + "\n")
     for ip_address in IP_Addresses:
         ip_counter += 1
         final_response = ip_address
@@ -146,7 +151,7 @@ def ip_lookup():
         if enable_VT:
             vt_counter = get_provider_counter("VT", vt_counter)
             final_response += str(vt_ip_lookup(ip_address, vt_counter))
-        out_file.write(final_response + delimiter)
+        out_file.write(final_response + delimiter + "\n")
     out_file.close()
 
 
