@@ -79,6 +79,56 @@ def read_input_file():
                 IP_Addresses.append(match.group())
 
 
+def get_api_key(provider, provider_counter):
+    if provider == "VT":
+        return VT_API_KEYS[provider_counter]
+    elif provider == "AIP":
+        return AIP_API_KEYS[provider_counter]
+
+
+def vt_ip_lookup(ip_to_check, provider_counter):
+    api_key = get_api_key("VT", provider_counter)
+    print(api_key)
+
+
+def aip_ip_lookup(ip_to_check, provider_counter):
+    api_key = get_api_key("AIP", provider_counter)
+    print(api_key)
+
+
+def get_provider_counter(provider, provider_counter):
+    api_keys_length = 0
+    if provider == "VT":
+        api_keys_length = len(VT_API_KEYS)
+    elif provider == "AIP":
+        api_keys_length = len(AIP_API_KEYS)
+    else:
+        quit()
+
+    provider_counter += 1
+    if provider_counter >= api_keys_length:
+        provider_counter = 0
+
+    return provider_counter
+
+
+def ip_lookup():
+    ip_addresses_length = len(IP_Addresses)
+    ip_counter = 0
+    vt_counter = -1
+    aip_counter = -1
+    for ip_address in IP_Addresses:
+        ip_counter += 1
+        if enable_VT or enable_AbuseIP:
+            print(f"({ip_counter}/{ip_addresses_length}) Checking {ip_address}...")
+        if enable_VT:
+            vt_counter = get_provider_counter("VT", vt_counter)
+            vt_ip_lookup(ip_address, vt_counter)
+        if enable_AbuseIP:
+            aip_counter = get_provider_counter("AIP", aip_counter)
+            aip_ip_lookup(ip_address, aip_counter)
+
+
 if __name__ == '__main__':
     # Read configuration file
     init_configuration()
@@ -86,6 +136,5 @@ if __name__ == '__main__':
     init_api_keys()
     # Read input file and add IP addresses to list
     read_input_file()
-    print(IP_Addresses)
-    print(VT_API_KEYS)
-    print(AIP_API_KEYS)
+    # Start Lookup
+    ip_lookup()
