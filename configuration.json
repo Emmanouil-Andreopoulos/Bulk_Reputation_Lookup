@@ -1,5 +1,8 @@
 {
     "enable_VT" : "True",
     "enable_AbuseIP" : "True",
-    "input_filename" : "input_list.txt"
+    "input_filename" : "input_list.txt",
+    "output_filename" : "output_list.txt",
+    "VT_API_KEYS_filename" : "VT_API_KEYS.txt",
+    "AIP_API_KEYS_filename" : "AIP_API_KEYS.txt"
 }

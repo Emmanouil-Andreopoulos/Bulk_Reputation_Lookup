@@ -2,18 +2,26 @@ import json
 import re
 import requests
 
+# Default Configuration
 enable_VT = False
 enable_AbuseIP = False
 IP_Addresses = list()
 input_filename = "input_list.txt"
+output_filename = "output_list.txt"
 
 
 def init_configuration():
     try:
-        with open("configuration.json", "r") as jsonfile:
+        with open("configurations.json", "r") as jsonfile:
             configuration = json.load(jsonfile)
     except FileNotFoundError:
-        print("Configuration file not found")
+        print("Configuration file not found!\n\nExample of json configuration file:\n")
+        print("{")
+        print('     "enable_VT" : "True",')
+        print('     "enable_AbuseIP" : "True",')
+        print('     "input_filename" : "input_list.txt",')
+        print('     "output_filename" : "output_list.txt"')
+        print("}")
         quit()
 
     if configuration["enable_VT"].casefold() == "True".casefold():
