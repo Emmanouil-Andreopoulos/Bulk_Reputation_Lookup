@@ -12,7 +12,7 @@ input_filename = "input_list.txt"
 output_filename = "output_list.txt"
 VT_API_KEYS_filename = "VT_API_KEYS.txt"
 AIP_API_KEYS_filename = "AIP_API_KEYS.txt"
-delimiter = ";"
+delimiter = ","
 
 
 def init_configuration():
@@ -28,7 +28,7 @@ def init_configuration():
         print('     "output_filename" : "output_list.csv",')
         print('     "VT_API_KEYS_filename" : "VT_API_KEYS.txt",')
         print('     "AIP_API_KEYS_filename" : "AIP_API_KEYS.txt",')
-        print('     "delimiter" : ";"')
+        print('     "delimiter" : ","')
         print("}")
         quit()
 
@@ -113,8 +113,9 @@ def vt_ip_lookup(ip_to_check, provider_counter):
     response = requests.get(f"https://www.virustotal.com/api/v3/ip_addresses/{ip_to_check}",
                             headers={"x-apikey": api_key, "Accept": "application/json"})
     result = response.json().get("data").get("attributes").get("last_analysis_stats")
-    f_result = delimiter + str(result["malicious"]) + delimiter + str(result["suspicious"]) + delimiter + \
-               str(result["harmless"]) + delimiter + str(result["undetected"]) + delimiter + str(result["timeout"])
+    f_result = delimiter + str(result["malicious"]) + delimiter + str(result["suspicious"]) + \
+               delimiter + str(result["harmless"]) + delimiter + str(result["undetected"]) + \
+               delimiter + str(result["timeout"])
     return f_result
 
 
@@ -136,9 +137,10 @@ def ip_lookup():
     out_file = open(output_filename, "w")
     file_header = "IP Address"
     if enable_AbuseIP:
-        file_header += delimiter + "abuseConfidenceScore" + delimiter + "totalReports" + delimiter + "countryCode"
+        file_header += delimiter + "AbuseConfidenceScore" + delimiter + "AbuseTotalReports" + delimiter + "CountryCode"
     if enable_VT:
-        file_header += delimiter + "malicious" + delimiter + "suspicious" + delimiter + "harmless" + delimiter + "undetected" + delimiter + "timeout"
+        file_header += delimiter + "VT Malicious" + delimiter + "VT Suspicious" + delimiter + "VT Harmless" + \
+                       delimiter + "VT Undetected" + delimiter + "VT Timeout"
     out_file.write(file_header + delimiter + "\n")
     for ip_address in IP_Addresses:
         ip_counter += 1

@@ -5,5 +5,5 @@
     "output_filename" : "output_list.csv",
     "VT_API_KEYS_filename" : "VT_API_KEYS.txt",
     "AIP_API_KEYS_filename" : "AIP_API_KEYS.txt",
-    "delimiter" : ";"
+    "delimiter" : ","
 }
